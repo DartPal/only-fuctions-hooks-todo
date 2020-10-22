@@ -1,29 +1,34 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext} from 'react'
 import {AlertContext} from "../../Context/alert/alertContext";
+import {FirebaseContext} from "../../Context/firebase/FirebaseContext";
 
 export const Form = () => {
-
-    const [value, setValue] =useState('')
+    const [value, setValue] = useState('')
     const alert = useContext(AlertContext)
+    const firebase = useContext(FirebaseContext)
 
     const submitHandler = event => {
         event.preventDefault()
 
         if (value.trim()) {
-            alert.show('Task was created', 'success')
+            firebase.addNote(value.trim()).then(() => {
+                alert.show('Заметка была создана', 'success')
+            }).catch(() => {
+                alert.show('Что-то пошло не так', 'danger')
+            })
             setValue('')
         } else {
-            alert.show('Create task')
+            alert.show('Введите название заметки')
         }
     }
 
-    return(
+    return (
         <form onSubmit={submitHandler}>
             <div className="form-group">
                 <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter task-name"
+                    placeholder="Введите название заметки"
                     value={value}
                     onChange={e => setValue(e.target.value)}
                 />

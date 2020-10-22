@@ -1,4 +1,4 @@
-import {ADD_NOTE, FETCH_NOTES, REMOVE_NOTE, SHOW_LOADER} from "../types";
+import {ADD_NOTE, FETCH_NOTES, REMOVE_NOTE, SHOW_LOADER} from '../types'
 
 const handlers = {
     [SHOW_LOADER]: state => ({...state, loading: true}),
@@ -6,15 +6,15 @@ const handlers = {
         ...state,
         notes: [...state.notes, payload]
     }),
-    [FETCH_NOTES]: (state, {payload}) => ({...state, notes: payload}),
+    [FETCH_NOTES]: (state, {payload}) => ({...state, notes: payload, loading: false}),
     [REMOVE_NOTE]: (state, {payload}) => ({
         ...state,
-        note: state.notes.filter(note => note.id !== payload)
+        notes: state.notes.filter(note => note.id !== payload)
     }),
     DEFAULT: state => state
 }
 
 export const firebaseReducer = (state, action) => {
-    const handle = handlers[action.type] || handlers.default
+    const handle = handlers[action.type] || handlers.DEFAULT
     return handle(state, action)
 }
